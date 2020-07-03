@@ -1,0 +1,47 @@
+@import "./config.scss"; // 配置常量
+@import "../common/var.scss";
+
+/** BEM
+----------------*/
+@mixin b($block) { // 混合b 调用用@include b(row) {}
+  $B: $namespace + '-' + $block; // 变量声明
+
+  .#{$B} { // 选择器名获取变量
+    @content; // 跟插槽差不多，把调用b里面的内容，放置在这
+  }
+}
+
+@mixin m($modifier) { // 如果要传一个数组@include m((flex, black)) {}这样；
+  // &--flex
+  $currentSelector: "";
+
+  @each $unit in $modifier {
+    $currentSelector: $currentSelector + & + $modifier-separator + $unit + ',';// &-- +  $unit
+  }
+
+  @at-root { // 不被它上级嵌套，单独选择添加样式
+    #{$currentSelector} {
+      @content;
+    }
+  }
+}
+
+@mixin when($state) {
+  @at-root {
+    &.#{$state-prefix + $state} {
+      @content;
+    }
+  }
+}
+
+/* 断点 （break points）
+------------------------*/
+@mixin res($key, $map: $--breakpoints) {
+  @if map-has-key($map, $key) { // maps函数  根据给定的 key 值判断 map 是否有对应的 value 值，如果有返回 true，否则返回 false。
+    @media only screen and #{inspect(map-get($map, $key))} { // inspect函数可加可不加， map-get($map,$key)：根据给定的 key 值，返回 map 中相关的值
+      @content;
+    }
+  } @else {
+    @warn "undefined points: `#{$map}`"
+  }
+};

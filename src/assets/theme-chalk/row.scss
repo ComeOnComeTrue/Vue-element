@@ -1,0 +1,41 @@
+@import "./mixins/mixins.scss"; // 混合 mixin
+@import "./mixins/utils.scss";
+
+@include b(row) { // 调用混合b
+  box-sizing: border-box;
+
+  @include utils-clearfix;
+
+  @include m(flex) { //可传递数组形式@include m((flex,block))然后变成 .el-row--flex, .el-row--block {}
+    display: flex;
+
+    &::after,
+    &::before {
+      display: none;
+    }
+
+    @include when(justify-end) {
+      justify-content: flex-end;
+    }
+
+    @include when(justify-ecenter) {
+      justify-content: center;
+    }
+
+    @include when(justify-space-between) {
+      justify-content: space-between;
+    }
+
+    @include when(justify-space-around) {
+      justify-content: space-around;
+    }
+
+    @include when(align-middle) {
+      align-items: center;
+    }
+
+    @include when(align-bottom) {
+      align-items: flex-end;
+    }
+  }
+};
